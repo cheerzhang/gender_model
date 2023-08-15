@@ -12,4 +12,4 @@ ADD server.py server.py
 # Exposing port 5001
 EXPOSE 5001
 # start docker
-CMD ['gunicorn', '--bind', '0.0.0.0:5001', 'server:app']
+CMD gunicorn --bind 0.0.0.0:5001 server:app
