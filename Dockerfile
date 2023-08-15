@@ -1,13 +1,15 @@
 FROM python:3.9.6
 
-# working directory
+# Working directory
 WORKDIR /app
-# install requirements.txt file
+
+# Copy and install requirements
+COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
-# copy file
-ADD ./model ./model
-ADD server.py server.py
+# Copy remaining files
+COPY ./model /app/model
+COPY server.py /app/server.py
 
 # Exposing port 5001
 EXPOSE 5001
