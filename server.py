@@ -1,7 +1,5 @@
-import xgboost as xgb
 from flask import Flask, request, jsonify
 import pandas as pd
-from util import data_util  # You need to import data_util if it's defined in a separate file
 import joblib
 
 app = Flask(__name__)
