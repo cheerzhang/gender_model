@@ -21,22 +21,5 @@ def predict_gender():
     res = {'Predict of gender': predicted_genders}
     return jsonify(res)
 
-@app.route('/predict_a_score', methods=['POST'])
-def predict_a_score():
-    json_data = request.get_json()
-
-    model = xgb.Booster()
-    model.load_model('./model/model.xgb')
-
-    df = pd.DataFrame(json_data, index=[0])
-    obj = data_util.DATA_A_SCORE()
-    df = obj.process_fe(df)
-
-    dPredict = xgb.DMatrix(df.values)
-    y_pred = model.predict(dPredict)
-
-    res = {'Predict of a score': y_pred.tolist()}  # Convert the prediction to a list
-    return jsonify(res)
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
