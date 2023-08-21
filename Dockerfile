@@ -4,14 +4,10 @@ FROM python:3.9.6
 WORKDIR /app
 
 # Copy and install requirements
-COPY requirements.txt /app/requirements.txt
+COPY . /app
 RUN pip install -r requirements.txt
 
-# Copy remaining files
-COPY ./model /app/model
-COPY server.py /app/server.py
-
-# Exposing port 5001
-EXPOSE 5001
+# Exposing port 5002
+EXPOSE 5002
 # start docker
-CMD gunicorn --bind 0.0.0.0:5001 server:app
+CMD ["gunicorn", "--bind", "0.0.0.0:5002", "gender_model.server:app"]
