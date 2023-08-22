@@ -12,7 +12,7 @@ api_model_version = app.config['MODEL_VERSION']
 
 @app.route(f'{api_path_prefix}/health', methods=['GET'])
 def check_health():
-    X_pred_vec = vectorizer.transform(['peter'])
+    X_pred_vec = vectorizer.transform([['peter']])
     y_pred = model.predict(X_pred_vec)
     res = {'alive': y_pred[0]}
     return jsonify(res)
