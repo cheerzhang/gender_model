@@ -14,7 +14,8 @@ api_model_version = app.config['MODEL_VERSION']
 def check_health():
     X_pred_vec = vectorizer.transform(['peter'])
     y_pred = model.predict(X_pred_vec)
-    res = {'alive': y_pred[0]}
+    y_pred = int(y_pred[0])
+    res = {'alive': y_pred}
     return jsonify(res)
 
 @app.route(f'{api_path_prefix}/predict_gender_v1', methods=['POST'])
