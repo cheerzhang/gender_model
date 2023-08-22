@@ -4,8 +4,8 @@ import joblib
 from gender_model.config import Config
 
 app = Flask(__name__)
-model = joblib.load('gender/model/gender_model.pkl')
-vectorizer = joblib.load('gender/model/gender_vectorizer.pkl')
+model = joblib.load('gender_model/model/gender_model.pkl')
+vectorizer = joblib.load('gender_model/model/gender_vectorizer.pkl')
 app.config.from_object(Config)
 api_path_prefix = app.config['API_PATH_PREFIX']
 api_model_version = app.config['MODEL_VERSION']
@@ -17,7 +17,7 @@ def check_health():
     res = {'alive': y_pred[0]}
     return jsonify(res)
 
-@app.route(f'{api_path_prefix}/predict_gender', methods=['POST'])
+@app.route(f'{api_path_prefix}/predict_gender_v1', methods=['POST'])
 def predict_gender():
     json_data = request.get_json()
 
