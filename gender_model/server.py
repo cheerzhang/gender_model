@@ -4,8 +4,8 @@ import joblib
 from gender_model.config import Config
 
 app = Flask(__name__)
-model = joblib.load('gender_model/model/gender_model.pkl')
-vectorizer = joblib.load('gender_model/model/gender_vectorizer.pkl')
+model = joblib.load('/app/gender_model/model/gender_model.pkl')
+vectorizer = joblib.load('/app/gender_model/model/gender_vectorizer.pkl')
 app.config.from_object(Config)
 api_path_prefix = app.config['API_PATH_PREFIX']
 api_model_version = app.config['MODEL_VERSION']
