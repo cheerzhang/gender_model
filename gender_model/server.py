@@ -1,9 +1,14 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 import joblib
-from gender_model.config import Config
+import sys, os
+project_root = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, project_root)
+from config import Config
 import logging
-import sys
+
+
+
 
 app = Flask(__name__)
 model = joblib.load('gender_model/model/logistic_gender.pkl')
@@ -33,6 +38,7 @@ def check_health():
         X_pred_vec = vectorizer.transform(['peter'])
         y_pred = model.predict(X_pred_vec)
         y_pred = int(y_pred[0])
+        logger.info(f'predict of peter is: {y_pred}')
         res = {'alive': y_pred}
         return jsonify(res)
     except Exception as e:
@@ -54,4 +60,5 @@ def predict_gender():
     return jsonify(res)
 
 if __name__ == '__main__':
+    logger.setLevel(logging.INFO)
     app.run(host='0.0.0.0', port=5002)  
