@@ -1,10 +1,8 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 import joblib
-import sys, os
-project_root = os.path.abspath(os.path.dirname(__file__))
-sys.path.insert(0, project_root)
-from config import Config
+import sys
+from gender_model.config import Config
 import logging
 
 
