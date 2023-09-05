@@ -12,6 +12,32 @@ app.config.from_object(Config)
 api_path_prefix = app.config['API_PATH_PREFIX']
 api_model_version = app.config['MODEL_VERSION']
 
+'''
+# Create a custom logger
+logger = logging.getLogger(__name__)
+# ... Rest of your logging configuration ...
+stdout_handler = logging.StreamHandler(stream=sys.stdout)
+stdout_handler.setLevel(logging.INFO)
+stderr_handler = logging.StreamHandler(stream=sys.stderr)
+stderr_handler.setLevel(logging.WARNING)
+# Define log formats
+log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+stdout_handler.setFormatter(log_format)
+stderr_handler.setFormatter(log_format)
+# Add the handlers to the logger based on log levels
+logger.addHandler(stdout_handler)  # INFO, NOTICE, DEBUG will go to STDOUT
+logger.addHandler(stderr_handler)  # WARNING, ERROR, CRITICAL will go to STDERR
+
+# for gunicorn
+logger_gunicorn = logging.getLogger('gunicorn.info')
+stdout_handler_gunicorn = logging.StreamHandler(stream=sys.stdout)
+stdout_handler_gunicorn.setLevel(logging.INFO)
+logger_gunicorn.addHandler(stdout_handler_gunicorn)
+'''
+
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.INFO)
+
 @app.route(f'{api_path_prefix}/health', methods=['GET'])
 def check_health():
     try:
@@ -41,6 +67,4 @@ def predict_gender():
     return jsonify(res)
 
 if __name__ == '__main__':
-    app.logger.setLevel(logging.INFO)
-    app.logger.addHandler(logging.StreamHandler(sys.stdout))
     app.run(host='0.0.0.0', port=5002)
