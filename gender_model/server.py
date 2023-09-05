@@ -57,6 +57,4 @@ def predict_gender():
 
 if __name__ == '__main__':
     logger.setLevel(logging.INFO)
-    logger.info('info')
-    logger.error('error')
     app.run(host='0.0.0.0', port=5002)
