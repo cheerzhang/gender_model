@@ -5,9 +5,6 @@ import sys
 from gender_model.config import Config
 import logging
 
-
-
-
 app = Flask(__name__)
 model = joblib.load('gender_model/model/logistic_gender.pkl')
 vectorizer = joblib.load('gender_model/model/countvectorizer_gender.pkl')
@@ -17,7 +14,7 @@ api_model_version = app.config['MODEL_VERSION']
 
 # Create a custom logger
 logger = logging.getLogger(__name__)
-# Define log handlers for STDOUT (INFO, NOTICE, DEBUG) and STDERR (WARNING, ERROR, CRITICAL)
+# ... Rest of your logging configuration ...
 stdout_handler = logging.StreamHandler(stream=sys.stdout)
 stdout_handler.setLevel(logging.INFO)
 stderr_handler = logging.StreamHandler(stream=sys.stderr)
@@ -56,10 +53,8 @@ def predict_gender():
     predicted_genders = ['M' if pred == 1 else 'F' for pred in y_pred]
     res = {'Predict of gender': predicted_genders}
     logger.info(f"predict of {df['first_name'].values} is: {predicted_genders}")
-    logger.info('testing_')
-    print('testing')
     return jsonify(res)
 
 if __name__ == '__main__':
     logger.setLevel(logging.INFO)
-    app.run(host='0.0.0.0', port=5002)  
+    app.run(host='0.0.0.0', port=5002)
