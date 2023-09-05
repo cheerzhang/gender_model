@@ -55,6 +55,7 @@ def predict_gender():
 
     predicted_genders = ['M' if pred == 1 else 'F' for pred in y_pred]
     res = {'Predict of gender': predicted_genders}
+    logger.info(f"predict of {df['first_name'].values} is: {predicted_genders}")
     return jsonify(res)
 
 if __name__ == '__main__':
