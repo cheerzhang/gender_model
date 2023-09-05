@@ -27,6 +27,13 @@ stderr_handler.setFormatter(log_format)
 logger.addHandler(stdout_handler)  # INFO, NOTICE, DEBUG will go to STDOUT
 logger.addHandler(stderr_handler)  # WARNING, ERROR, CRITICAL will go to STDERR
 
+
+# for gunicorn
+logger_gunicorn = logging.getLogger('gunicorn.info')
+stdout_handler_gunicorn = logging.StreamHandler(stream=sys.stdout)
+stdout_handler_gunicorn.setLevel(logging.INFO)
+logger_gunicorn.addHandler(stdout_handler_gunicorn)
+
 @app.route(f'{api_path_prefix}/health', methods=['GET'])
 def check_health():
     try:
