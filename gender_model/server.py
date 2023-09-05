@@ -36,6 +36,7 @@ logger_gunicorn.addHandler(stdout_handler_gunicorn)
 '''
 
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.addHandler(logging.StreamHandler(sys.stderr))
 app.logger.setLevel(logging.INFO)
 
 @app.route(f'{api_path_prefix}/health', methods=['GET'])
@@ -54,17 +55,19 @@ def check_health():
 
 @app.route(f'{api_path_prefix}/predict_gender_v1', methods=['POST'])
 def predict_gender():
-    json_data = request.get_json()
-
-    df = pd.DataFrame(json_data, index=[0])
-
-    X_pred_vec = vectorizer.transform(df['first_name'].values)
-    y_pred = model.predict(X_pred_vec)
-
-    predicted_genders = ['M' if pred == 1 else 'F' for pred in y_pred]
-    res = {'Predict of gender': predicted_genders}
-    app.logger.info(f"predict of {df['first_name'].values} is: {predicted_genders}")
-    return jsonify(res)
+    try:
+        json_data = request.get_json()
+        df = pd.DataFrame(json_data, index=[0])
+        X_pred_vec = vectorizer.transform(df['first_name'].values)
+        y_pred = model.predict(X_pred_vec)
+        predicted_genders = ['M' if pred == 1 else 'F' for pred in y_pred]
+        res = {'Predict of gender': predicted_genders}
+        app.logger.info(f"predict of {df['first_name'].values} is: {predicted_genders}")
+        return jsonify(res)
+    except Exception as e:
+        app.logger.error(f"Exception occurred: {str(e)}")
+        res = {'err': e}
+        return jsonify(res), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002)
