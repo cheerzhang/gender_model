@@ -24,6 +24,11 @@ def check_health():
         y_pred = model.predict(X_pred_vec)
         y_pred = int(y_pred[0])
         # app.logger.info(f'predict of peter is: {y_pred}')
+        app.logger.info('dummy log for info')
+        app.logger.debug('dummy log for debug')
+        app.logger.warning('dummy log for warning')
+        app.logger.error('dummy log for error')
+        app.logger.critical('dummy log for critical')
         res = {'alive': y_pred}
         return jsonify(res)
     except Exception as e:
