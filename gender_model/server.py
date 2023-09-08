@@ -26,7 +26,7 @@ stderr_handler = logging.StreamHandler(stream=sys.stderr)
 
 # Set the log level for each handler
 stdout_handler.setLevel(logging.INFO)  # Log INFO and above to stdout
-stderr_handler.setLevel(logging.WARNING)  # Log WARNING and above to stderr
+stderr_handler.setLevel(logging.ERROR)  # Log WARNING and above to stderr
 
 # Define log formats (you can customize these as needed)
 log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -37,12 +37,27 @@ stderr_handler.setFormatter(log_format)
 logger.addHandler(stdout_handler)  # INFO, NOTICE, DEBUG will go to stdout
 logger.addHandler(stderr_handler)  # WARNING, ERROR, CRITICAL will go to stderr
 
-# Example log messages
-logger.debug('This is a DEBUG message')  # Goes to stdout
-logger.info('This is an INFO message')    # Goes to stdout
-logger.warning('This is a WARNING message')  # Goes to stderr
-logger.error('This is an ERROR message')    # Goes to stderr
-logger.critical('This is a CRITICAL message')  # Goes to stderr
+
+@app.route(f'{api_path_prefix}/logger_debug', methods=['GET'])
+def logger_debug():
+    logger.debug('This is a DEBUG message')  # Goes to stdout
+    return jsonify({'alive': 1})
+@app.route(f'{api_path_prefix}/logger_info', methods=['GET'])
+def logger_info():
+    logger.info('This is an INFO message')    # Goes to stdout
+    return jsonify({'alive': 1})
+@app.route(f'{api_path_prefix}/logger_warning', methods=['GET'])
+def logger_warning():
+    logger.warning('This is a WARNING message')  # Goes to stderr
+    return jsonify({'alive': 1})
+@app.route(f'{api_path_prefix}/logger_error', methods=['GET'])
+def logger_error():
+    logger.error('This is an ERROR message')    # Goes to stderr
+    return jsonify({'alive': 1})
+@app.route(f'{api_path_prefix}/logger_critical', methods=['GET'])
+def logger_critical():  
+    logger.critical('This is a CRITICAL message')  # Goes to stderr
+    return jsonify({'alive': 1})
 
 @app.route(f'{api_path_prefix}/health', methods=['GET'])
 def check_health():
