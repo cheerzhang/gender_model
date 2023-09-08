@@ -12,10 +12,37 @@ app.config.from_object(Config)
 api_path_prefix = app.config['API_PATH_PREFIX']
 api_model_version = app.config['MODEL_VERSION']
 
-
+'''
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.addHandler(logging.StreamHandler(sys.stderr))
 app.logger.setLevel(logging.DEBUG)
+'''
+
+logger = logging.getLogger(__name__)
+
+# Create handlers for stdout (INFO, NOTICE, DEBUG) and stderr (WARNING, ERROR, CRITICAL)
+stdout_handler = logging.StreamHandler(stream=sys.stdout)
+stderr_handler = logging.StreamHandler(stream=sys.stderr)
+
+# Set the log level for each handler
+stdout_handler.setLevel(logging.INFO)  # Log INFO and above to stdout
+stderr_handler.setLevel(logging.WARNING)  # Log WARNING and above to stderr
+
+# Define log formats (you can customize these as needed)
+log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+stdout_handler.setFormatter(log_format)
+stderr_handler.setFormatter(log_format)
+
+# Add the handlers to the logger based on log levels
+logger.addHandler(stdout_handler)  # INFO, NOTICE, DEBUG will go to stdout
+logger.addHandler(stderr_handler)  # WARNING, ERROR, CRITICAL will go to stderr
+
+# Example log messages
+logger.debug('This is a DEBUG message')  # Goes to stdout
+logger.info('This is an INFO message')    # Goes to stdout
+logger.warning('This is a WARNING message')  # Goes to stderr
+logger.error('This is an ERROR message')    # Goes to stderr
+logger.critical('This is a CRITICAL message')  # Goes to stderr
 
 @app.route(f'{api_path_prefix}/health', methods=['GET'])
 def check_health():
