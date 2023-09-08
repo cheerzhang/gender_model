@@ -42,6 +42,7 @@ def predict_gender():
         json_data = request.get_json()
         # df = pd.DataFrame(json_data, index=[0])
         df = pd.DataFrame(json_data)
+        app.logger.debug(f'df: {df}')
         X_pred_vec = vectorizer.transform(df['first_name'].values)
         y_pred = model.predict(X_pred_vec)
         app.logger.debug(y_pred)
