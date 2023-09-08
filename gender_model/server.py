@@ -40,7 +40,8 @@ def check_health():
 def predict_gender():
     try:
         json_data = request.get_json()
-        df = pd.DataFrame(json_data, index=[0])
+        # df = pd.DataFrame(json_data, index=[0])
+        df = pd.DataFrame(json_data)
         X_pred_vec = vectorizer.transform(df['first_name'].values)
         y_pred = model.predict(X_pred_vec)
         predicted_genders = ['M' if pred == 1 else 'F' for pred in y_pred]
