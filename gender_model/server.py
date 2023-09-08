@@ -19,6 +19,7 @@ app.logger.setLevel(logging.DEBUG)
 '''
 
 logger = logging.getLogger(__name__)
+app.logger.setLevel(logging.INFO)
 
 # Create handlers for stdout (INFO, NOTICE, DEBUG) and stderr (WARNING, ERROR, CRITICAL)
 stdout_handler = logging.StreamHandler(stream=sys.stdout)
