@@ -12,14 +12,9 @@ app.config.from_object(Config)
 api_path_prefix = app.config['API_PATH_PREFIX']
 api_model_version = app.config['MODEL_VERSION']
 
-'''
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.logger.addHandler(logging.StreamHandler(sys.stderr))
-app.logger.setLevel(logging.DEBUG)
-'''
 
 logger = logging.getLogger(__name__)
-app.logger.setLevel(logging.INFO)
+app.logger.setLevel(logging.DEBUG)
 
 # Create handlers for stdout (INFO, NOTICE, DEBUG) and stderr (WARNING, ERROR, CRITICAL)
 stdout_handler = logging.StreamHandler(stream=sys.stdout)
@@ -66,17 +61,10 @@ def check_health():
         X_pred_vec = vectorizer.transform(['peter'])
         y_pred = model.predict(X_pred_vec)
         y_pred = int(y_pred[0])
-        # app.logger.info(f'predict of peter is: {y_pred}')
-        # app.logger.info('dummy log for info')
-        # app.logger.debug('dummy log for debug')
-        # app.logger.warning('dummy log for warning')
         res = {'alive': y_pred}
         return jsonify(res)
     except Exception as e:
-        # app.logger.error(f"Exception occurred: {str(e)}")
-        # app.logger.error('dummy log for error')
-        # app.logger.critical('dummy log for critical')
-        res = {'alive': 0}
+        res = {'alive': str(e)}
         return jsonify(res), 500
 
 @app.route(f'{api_path_prefix}/predict_gender_v1', methods=['POST'])
