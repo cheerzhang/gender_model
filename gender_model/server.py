@@ -13,16 +13,26 @@ api_path_prefix = app.config['API_PATH_PREFIX']
 api_model_version = app.config['MODEL_VERSION']
 
 
-logger = logging.getLogger(__name__)
-app.logger.setLevel(logging.DEBUG)
+class LessThanFilter(logging.Filter):
+    def __init__(self, exclusive_maximum, name=""):
+        super(LessThanFilter, self).__init__(name)
+        self.max_level = exclusive_maximum
+
+    def filter(self, record):
+        #non-zero return means we log this message
+        return 1 if record.levelno < self.max_level else 0
+
+logger = app.logger
+logger.setLevel(logging.DEBUG)
 
 # Create handlers for stdout (INFO, NOTICE, DEBUG) and stderr (WARNING, ERROR, CRITICAL)
 stdout_handler = logging.StreamHandler(stream=sys.stdout)
 stderr_handler = logging.StreamHandler(stream=sys.stderr)
 
 # Set the log level for each handler
-stdout_handler.setLevel(logging.INFO)  # Log INFO and above to stdout
-stderr_handler.setLevel(logging.ERROR)  # Log WARNING and above to stderr
+stderr_handler.setLevel(logging.WARNING)  # Log WARNING and above to stderr
+stdout_handler.setLevel(logging.DEBUG)  # Log INFO and above to stdout
+stdout_handler.addFilter(LessThanFilter(logging.WARNING))
 
 # Define log formats (you can customize these as needed)
 log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -30,8 +40,9 @@ stdout_handler.setFormatter(log_format)
 stderr_handler.setFormatter(log_format)
 
 # Add the handlers to the logger based on log levels
-logger.addHandler(stdout_handler)  # INFO, NOTICE, DEBUG will go to stdout
+logger.handlers.clear()
 logger.addHandler(stderr_handler)  # WARNING, ERROR, CRITICAL will go to stderr
+logger.addHandler(stdout_handler)  # INFO, NOTICE, DEBUG will go to stdout
 
 
 @app.route(f'{api_path_prefix}/logger_debug', methods=['GET'])
