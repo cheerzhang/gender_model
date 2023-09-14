@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import pandas as pd
 import joblib
 import sys
@@ -12,59 +12,10 @@ app.config.from_object(Config)
 api_path_prefix = app.config['API_PATH_PREFIX']
 api_model_version = app.config['MODEL_VERSION']
 
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('home_page.html')
 
-class LessThanFilter(logging.Filter):
-    def __init__(self, exclusive_maximum, name=""):
-        super(LessThanFilter, self).__init__(name)
-        self.max_level = exclusive_maximum
-
-    def filter(self, record):
-        #non-zero return means we log this message
-        return 1 if record.levelno < self.max_level else 0
-
-logger = app.logger
-logger.setLevel(logging.DEBUG)
-
-# Create handlers for stdout (INFO, NOTICE, DEBUG) and stderr (WARNING, ERROR, CRITICAL)
-stdout_handler = logging.StreamHandler(stream=sys.stdout)
-stderr_handler = logging.StreamHandler(stream=sys.stderr)
-
-# Set the log level for each handler
-stderr_handler.setLevel(logging.WARNING)  # Log WARNING and above to stderr
-stdout_handler.setLevel(logging.DEBUG)  # Log INFO and above to stdout
-stdout_handler.addFilter(LessThanFilter(logging.WARNING))
-
-# Define log formats (you can customize these as needed)
-log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-stdout_handler.setFormatter(log_format)
-stderr_handler.setFormatter(log_format)
-
-# Add the handlers to the logger based on log levels
-logger.handlers.clear()
-logger.addHandler(stderr_handler)  # WARNING, ERROR, CRITICAL will go to stderr
-logger.addHandler(stdout_handler)  # INFO, NOTICE, DEBUG will go to stdout
-
-
-@app.route(f'{api_path_prefix}/logger_debug', methods=['GET'])
-def logger_debug():
-    logger.debug('This is a DEBUG message')  # Goes to stdout
-    return jsonify({'alive': 1})
-@app.route(f'{api_path_prefix}/logger_info', methods=['GET'])
-def logger_info():
-    logger.info('This is an INFO message')    # Goes to stdout
-    return jsonify({'alive': 1})
-@app.route(f'{api_path_prefix}/logger_warning', methods=['GET'])
-def logger_warning():
-    logger.warning('This is a WARNING message')  # Goes to stderr
-    return jsonify({'alive': 1})
-@app.route(f'{api_path_prefix}/logger_error', methods=['GET'])
-def logger_error():
-    logger.error('This is an ERROR message')    # Goes to stderr
-    return jsonify({'alive': 1})
-@app.route(f'{api_path_prefix}/logger_critical', methods=['GET'])
-def logger_critical():  
-    logger.critical('This is a CRITICAL message')  # Goes to stderr
-    return jsonify({'alive': 1})
 
 @app.route(f'{api_path_prefix}/health', methods=['GET'])
 def check_health():
