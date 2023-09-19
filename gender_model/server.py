@@ -33,7 +33,7 @@ input_model = api.model('InputModel', {
     'first_name': fields.String(description='First name for gender prediction')
 })
 prediction_model = api.model('PredictionModel', {
-    "Predict of gender": fields.List(fields.String(default=''), description='Predicted gender', as_list=True)
+    "gender": fields.List(fields.String(default=''), description='Predicted gender', as_list=True)
 })
 @api.route(f'{api_path_prefix}/predict_gender_v1', methods=['POST'])
 class PredictGender(Resource):
@@ -47,7 +47,6 @@ class PredictGender(Resource):
             X_pred_vec = vectorizer.transform(df['first_name'].values)
             y_pred = model.predict(X_pred_vec)
             predicted_genders = ['M' if pred == 1 else 'F' for pred in y_pred]
-            logger.info(f"predict gender of {df['first_name'].values} is: {predicted_genders}")
             res = {'gender': predicted_genders}
             return res
         except Exception as e:
