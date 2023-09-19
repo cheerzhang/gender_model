@@ -35,7 +35,7 @@ input_model = api.model('InputModel', {
 prediction_model = api.model('PredictionModel', {
     "Predict of gender": fields.List(fields.String(default=''), description='Predicted gender', as_list=True)
 })
-@ns.route(f'{api_path_prefix}/predict_gender_v1', methods=['POST'])
+@api.route(f'{api_path_prefix}/predict_gender_v1', methods=['POST'])
 class PredictGender(Resource):
     @api.doc(params={'data': 'List of objects with first_name'})
     @api.expect([input_model], validate=True)
